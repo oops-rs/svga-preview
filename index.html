@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f5f4f0" />
+  <meta name="description" content="Preview SVGA animations in your browser. Open a local file or URL, inspect frames, and control playback. Powered by Rust and WebAssembly." />
+  <title>SVGA / Preview</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="./" aria-label="SVGA Preview home"><span class="brand-symbol">S<span>↗</span></span><span>SVGA<span class="brand-slash"> / </span><span class="brand-subtitle">Preview</span></span></a>
+    <nav><span class="local-badge"><i></i> Runs in your browser</span><a href="https://github.com/oops-rs/svga" target="_blank" rel="noreferrer">svga crate <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main>
+    <section class="workspace" aria-label="Animation preview">
+      <div class="workspace-title"><div><span class="eyebrow">ANIMATION WORKSPACE</span><h1>Preview your animation.</h1></div><button class="button primary" id="open-file"><span aria-hidden="true">＋</span> Open file</button></div>
+      <input id="file" type="file" accept=".svga" hidden />
+      <div class="stage" id="stage" data-background="checker" tabindex="0" aria-label="Preview canvas. Drop an SVGA file here.">
+        <div class="stage-top"><span id="stage-label">DEMO / ORBIT</span><span id="canvas-dimensions">480 × 480</span></div>
+        <div class="canvas-space" id="canvas-space"><canvas id="canvas" aria-label="SVGA animation"></canvas></div>
+        <div class="drop-overlay" id="drop-overlay"><span>Drop to preview</span><small>.svga files · up to 32 MB</small></div>
+        <div class="loading" id="loading" hidden><span class="spinner"></span><span id="loading-text">Starting the WASM decoder…</span><button id="cancel" class="text-button">Cancel</button></div>
+        <div class="stage-bottom"><span id="stage-note">Drop your .svga anywhere</span><div class="backgrounds" aria-label="Canvas background"><button data-bg="checker" class="swatch checker" aria-label="Transparent background" aria-pressed="true"></button><button data-bg="light" class="swatch light" aria-label="Light background" aria-pressed="false"></button><button data-bg="dark" class="swatch dark" aria-label="Dark background" aria-pressed="false"></button></div></div>
+      </div>
+      <div class="transport">
+        <div class="transport-buttons"><button id="previous" class="icon-button" aria-label="Previous frame" title="Previous frame (←)">‹</button><button id="play" class="play-button" aria-label="Play" title="Play / pause (Space)" disabled>▶</button><button id="next" class="icon-button" aria-label="Next frame" title="Next frame (→)">›</button></div>
+        <div class="scrubber"><label for="timeline" class="sr-only">Frame</label><input id="timeline" type="range" min="0" max="0" value="0" disabled /><div class="time-labels"><span id="current-time">0.00s</span><span id="duration">0.00s</span></div></div>
+        <label class="select-label"><span class="sr-only">Playback speed</span><select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+        <button id="loop" class="icon-button loop" aria-label="Loop playback" aria-pressed="true" title="Loop playback">↻</button>
+      </div>
+      <div class="under-stage"><span id="frame-label">FRAME — / —</span><label>Zoom <select id="zoom" aria-label="Zoom"><option value="fit">Fit</option><option value="0.5">50%</option><option value="1">100%</option><option value="2">200%</option></select></label><span class="keyboard-hint"><kbd>space</kbd> play / pause <kbd>←</kbd><kbd>→</kbd> step</span></div>
+      <p id="error" class="message error" role="alert" hidden></p>
+      <p id="status" class="sr-only" role="status" aria-live="polite"></p>
+    </section>
+    <aside class="inspector">
+      <section class="source-section"><span class="eyebrow">01 / SOURCE</span><h2>Open an animation.</h2><p>Open a local file, drop it onto the canvas, or paste a link.</p><button class="file-drop" id="browse"><span class="file-icon" aria-hidden="true">↥</span><strong>Choose an SVGA file</strong><span>or drag & drop · max 32 MB</span></button>
+      <form id="url-form"><label for="url">Or load from a URL</label><div class="url-field"><input id="url" type="url" placeholder="https://example.com/motion.svga" aria-describedby="cors-hint" required /><button type="submit" aria-label="Load URL">↗</button></div><small id="cors-hint">The source server must allow CORS.</small></form></section>
+      <section class="details-section"><div class="section-heading"><span class="eyebrow">02 / FILE DETAILS</span><span class="format-badge" id="format-badge">SVGA</span></div><h2 id="filename">Orbit.svga</h2><dl><div><dt>Canvas</dt><dd id="detail-size">—</dd></div><div><dt>Duration</dt><dd id="detail-duration">—</dd></div><div><dt>Frame rate</dt><dd id="detail-fps">—</dd></div><div><dt>Frames</dt><dd id="detail-frames">—</dd></div><div><dt>Layers / images</dt><dd id="detail-layers">—</dd></div><div><dt>File size</dt><dd id="detail-bytes">—</dd></div><div><dt>Decoded in</dt><dd id="detail-decode">—</dd></div></dl><p id="warnings" class="message warning" hidden></p><button class="text-button" id="demo">Load the demo <span aria-hidden="true">↗</span></button></section>
+      <section class="privacy"><span class="privacy-icon" aria-hidden="true">◎</span><div><strong>Your files stay with you.</strong><p>Local files never leave your device. URL files load directly from their source. No uploads, accounts, or tracking.</p></div></section>
+    </aside>
+  </main>
+  <footer><span>A small tool for things in motion.</span><span>Built with <a href="https://github.com/oops-rs/svga">svga</a> <span class="footer-dot">·</span> Rust + WebAssembly</span></footer>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

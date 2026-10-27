@@ -1,0 +1,14 @@
+/node_modules
+/dist
+/wasm/pkg
+/wasm/target
+/.wrangler
+/test-results
+/playwright-report
+/.grapha
+.DS_Store
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*

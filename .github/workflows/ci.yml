@@ -1,0 +1,34 @@
+name: Preview website
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: wasm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: cargo fmt --manifest-path wasm/Cargo.toml --check
+      - run: cargo clippy --manifest-path wasm/Cargo.toml --locked --all-targets -- -D warnings
+      - run: cargo test --manifest-path wasm/Cargo.toml --locked
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: svga-preview
+          path: dist

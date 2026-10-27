@@ -1,0 +1,8 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "svga-preview",
+  "compatibility_date": "2026-10-27",
+  "assets": { "directory": "./dist" },
+  "routes": [{ "pattern": "svga.elata.ai", "custom_domain": true }],
+  "workers_dev": false
+}
